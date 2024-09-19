@@ -21,8 +21,7 @@ update_verb: :PATCH
 update_mask: true
 description: |
   AddressGroup is a resource that specifies how a collection of IP/DNS used in Firewall Policy.
-references:
-  !ruby/object:Api::Resource::ReferenceLinks  # TODO(diogoesteves): change the url to GA once it is available.
+references: !ruby/object:Api::Resource::ReferenceLinks  # TODO(diogoesteves): change the url to GA once it is available.
   guides:
     "Use AddressGroups": "https://cloud.google.com/vpc/docs/use-address-groups-firewall-policies"
   api: "https://cloud.google.com/traffic-director/docs/reference/network-security/rest/v1beta1/organizations.locations.addressGroups"
@@ -66,6 +65,14 @@ examples:
       org_id: :ORG_ID
   - !ruby/object:Provider::Terraform::Examples
     name: "network_security_address_groups_advanced"
+    primary_resource_id: "default"
+    vars:
+      resource_name: "my-address-groups"
+    test_env_vars:
+      project: :PROJECT_NAME
+  - !ruby/object:Provider::Terraform::Examples
+    min_version: "beta"
+    name: "network_security_address_groups_cloud_armor"
     primary_resource_id: "default"
     vars:
       resource_name: "my-address-groups"
@@ -133,3 +140,17 @@ properties:
     required: true
     description: |
       Capacity of the Address Group.
+  - !ruby/object:Api::Type::Array
+    min_version: "beta"
+    name: "purpose"
+    description: |
+      List of supported purposes of the Address Group.
+    default_from_api: true
+    item_type: !ruby/object:Api::Type::Enum
+      name: 'undefined'
+      description: |
+        This field only has a name and description because of MM
+        limitations. It should not appear in downstreams.
+      values:
+        - :DEFAULT
+        - :CLOUD_ARMOR

@@ -301,11 +301,6 @@ var ServicesListBeta = mapOf(
         "displayName" to "Dataprocmetastore",
         "path" to "./google-beta/services/dataprocmetastore"
     ),
-    "datastore" to mapOf(
-        "name" to "datastore",
-        "displayName" to "Datastore",
-        "path" to "./google-beta/services/datastore"
-    ),
     "datastream" to mapOf(
         "name" to "datastream",
         "displayName" to "Datastream",
@@ -315,6 +310,11 @@ var ServicesListBeta = mapOf(
         "name" to "deploymentmanager",
         "displayName" to "Deploymentmanager",
         "path" to "./google-beta/services/deploymentmanager"
+    ),
+    "developerconnect" to mapOf(
+        "name" to "developerconnect",
+        "displayName" to "Developerconnect",
+        "path" to "./google-beta/services/developerconnect"
     ),
     "dialogflow" to mapOf(
         "name" to "dialogflow",
@@ -486,10 +486,20 @@ var ServicesListBeta = mapOf(
         "displayName" to "Looker",
         "path" to "./google-beta/services/looker"
     ),
+    "managedkafka" to mapOf(
+        "name" to "managedkafka",
+        "displayName" to "Managedkafka",
+        "path" to "./google-beta/services/managedkafka"
+    ),
     "memcache" to mapOf(
         "name" to "memcache",
         "displayName" to "Memcache",
         "path" to "./google-beta/services/memcache"
+    ),
+    "memorystore" to mapOf(
+        "name" to "memorystore",
+        "displayName" to "Memorystore",
+        "path" to "./google-beta/services/memorystore"
     ),
     "migrationcenter" to mapOf(
         "name" to "migrationcenter",
@@ -606,6 +616,11 @@ var ServicesListBeta = mapOf(
         "displayName" to "Secretmanager",
         "path" to "./google-beta/services/secretmanager"
     ),
+    "secretmanagerregional" to mapOf(
+        "name" to "secretmanagerregional",
+        "displayName" to "Secretmanagerregional",
+        "path" to "./google-beta/services/secretmanagerregional"
+    ),
     "securesourcemanager" to mapOf(
         "name" to "securesourcemanager",
         "displayName" to "Securesourcemanager",
@@ -615,6 +630,21 @@ var ServicesListBeta = mapOf(
         "name" to "securitycenter",
         "displayName" to "Securitycenter",
         "path" to "./google-beta/services/securitycenter"
+    ),
+    "securitycenterv2" to mapOf(
+        "name" to "securitycenterv2",
+        "displayName" to "securitycenterv2",
+        "path" to "./google-beta/services/securitycenterv2"
+    ),
+    "securitycentermanagement" to mapOf(
+        "name" to "securitycentermanagement",
+        "displayName" to "Securitycentermanagement",
+        "path" to "./google-beta/services/securitycentermanagement"
+    ),
+    "securitycenterv2" to mapOf(
+        "name" to "securitycenterv2",
+        "displayName" to "securitycenterv2",
+        "path" to "./google-beta/services/securitycenterv2"
     ),
     "securityposture" to mapOf(
         "name" to "securityposture",
@@ -645,6 +675,11 @@ var ServicesListBeta = mapOf(
         "name" to "serviceusage",
         "displayName" to "Serviceusage",
         "path" to "./google-beta/services/serviceusage"
+    ),
+    "siteverification" to mapOf(
+        "name" to "siteverification",
+        "displayName" to "Siteverification",
+        "path" to "./google-beta/services/siteverification"
     ),
     "sourcerepo" to mapOf(
         "name" to "sourcerepo",

@@ -43,6 +43,12 @@ examples:
       topic_name: 'example-topic'
       subscription_name: 'example-subscription'
   - !ruby/object:Provider::Terraform::Examples
+    name: 'pubsub_subscription_pull_filter'
+    primary_resource_id: 'example'
+    vars:
+      topic_name: 'example-topic'
+      subscription_name: 'example-subscription'
+  - !ruby/object:Provider::Terraform::Examples
     name: 'pubsub_subscription_dead_letter'
     primary_resource_id: 'example'
     vars:
@@ -65,6 +71,15 @@ examples:
       dataset_id: 'example_dataset'
       table_id: 'example_table'
   - !ruby/object:Provider::Terraform::Examples
+    name: 'pubsub_subscription_push_bq_service_account'
+    primary_resource_id: 'example'
+    vars:
+      topic_name: 'example-topic'
+      subscription_name: 'example-subscription'
+      dataset_id: 'example_dataset'
+      table_id: 'example_table'
+      service_account_id: 'example-bqw'
+  - !ruby/object:Provider::Terraform::Examples
     name: 'pubsub_subscription_push_cloudstorage'
     primary_resource_id: 'example'
     vars:
@@ -78,6 +93,14 @@ examples:
       topic_name: 'example-topic'
       subscription_name: 'example-subscription'
       bucket_name: 'example-bucket'
+  - !ruby/object:Provider::Terraform::Examples
+    name: 'pubsub_subscription_push_cloudstorage_service_account'
+    primary_resource_id: 'example'
+    vars:
+      topic_name: 'example-topic'
+      subscription_name: 'example-subscription'
+      bucket_name: 'example-bucket'
+      service_account_id: 'example-stw'
 docs: !ruby/object:Provider::Terraform::Docs
   note: |
     You can retrieve the email of the Google Managed Pub/Sub Service Account used for forwarding
@@ -123,7 +146,7 @@ properties:
       - !ruby/object:Api::Type::String
         name: 'table'
         description: |
-          The name of the table to which to write data, of the form {projectId}:{datasetId}.{tableId}
+          The name of the table to which to write data, of the form {projectId}.{datasetId}.{tableId}
         required: true
       - !ruby/object:Api::Type::Boolean
         name: 'useTopicSchema'
@@ -150,6 +173,12 @@ properties:
           When true and use_topic_schema or use_table_schema is true, any fields that are a part of the topic schema or message schema that
           are not part of the BigQuery table schema are dropped when writing to BigQuery. Otherwise, the schemas must be kept in sync
           and any messages with extra fields are not written and remain in the subscription's backlog.
+      - !ruby/object:Api::Type::String
+        name: 'serviceAccountEmail'
+        description: |
+          The service account to use to write to BigQuery. If not specified, the Pub/Sub
+          [service agent](https://cloud.google.com/iam/docs/service-agents),
+          service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com, is used.
   - !ruby/object:Api::Type::NestedObject
     name: 'cloudStorageConfig'
     conflicts:
@@ -189,6 +218,10 @@ properties:
         description: |
           The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB.
           The maxBytes limit may be exceeded in cases where messages are larger than the limit.
+      - !ruby/object:Api::Type::Integer
+        name: 'maxMessages'
+        description: |
+          The maximum messages that can be written to a Cloud Storage file before a new file is created. Min 1000 messages.
       - !ruby/object:Api::Type::Enum
         name: 'state'
         description: |
@@ -207,6 +240,16 @@ properties:
             name: 'writeMetadata'
             description: |
               When true, write the subscription name, messageId, publishTime, attributes, and orderingKey as additional fields in the output.
+          - !ruby/object:Api::Type::Boolean
+            name: 'useTopicSchema'
+            description: |
+              When true, the output Cloud Storage file will be serialized using the topic schema, if it exists.
+      - !ruby/object:Api::Type::String
+        name: 'serviceAccountEmail'
+        description: |
+          The service account to use to write to Cloud Storage. If not specified, the Pub/Sub
+          [service agent](https://cloud.google.com/iam/docs/service-agents),
+          service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com, is used.
   - !ruby/object:Api::Type::NestedObject
     name: 'pushConfig'
     conflicts:
@@ -273,7 +316,7 @@ properties:
 
           - v1beta1: uses the push format defined in the v1beta1 Pub/Sub API.
           - v1 or v1beta2: uses the push format defined in the v1 Pub/Sub API.
-        diff_suppress_func: 'tpgresource.IgnoreMissingKeyInMap("x-goog-version")'
+        diff_suppress_func: 'IgnoreMissingKeyInMap("x-goog-version")'
       - !ruby/object:Api::Type::NestedObject
         name: 'noWrapper'
         custom_flatten: 'templates/terraform/custom_flatten/pubsub_no_wrapper_write_metadata_flatten.go.erb'
@@ -320,7 +363,7 @@ properties:
       retain_acked_messages is true, then this also configures the retention
       of acknowledged messages, and thus configures how far back in time a
       subscriptions.seek can be done. Defaults to 7 days. Cannot be more
-      than 7 days (`"604800s"`) or less than 10 minutes (`"600s"`).
+      than 31 days (`"2678400s"`) or less than 10 minutes (`"600s"`).
 
       A duration in seconds with up to nine fractional digits, terminated
       by 's'. Example: `"600.5s"`.
@@ -358,6 +401,8 @@ properties:
   - !ruby/object:Api::Type::String
     name: 'filter'
     required: false
+    validation: !ruby/object:Provider::Terraform::Validation
+      regex: '^[\s\S]{0,256}$'
     description: |
       The subscription only delivers the messages that match the filter.
       Pub/Sub automatically acknowledges the messages that don't match the filter. You can filter messages

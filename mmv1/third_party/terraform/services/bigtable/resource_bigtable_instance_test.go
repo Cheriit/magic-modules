@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-provider-google/google/acctest"
 	"github.com/hashicorp/terraform-provider-google/google/envvar"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccBigtableInstance_basic(t *testing.T) {
@@ -890,7 +890,7 @@ EOT
 
 check "health_check_1" {
   assert {
-    condition     = data.http.make_backups_1.status_code == 200
+    condition     = data.http.make_backup_1.status_code == 200
     error_message = "HTTP request to create a backup returned a non-200 status code"
   }
 }
